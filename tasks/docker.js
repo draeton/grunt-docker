@@ -5,6 +5,7 @@
 // Licensed under the MIT license.
 module.exports = function (grunt) {
     "use strict";
+    var path = require('path');
     var Docker = require('docker');
 
     grunt.registerMultiTask('docker', 'Docker processor.', function () {
@@ -18,6 +19,7 @@ module.exports = function (grunt) {
         var src = [];
         this.files.forEach(function(f) {
             for( var i = 0; i < f.src.length; i++ ){
+                f.src[ i ] = f.src[ i ].replace(/\//g, path.sep);
                 src.push( f.src[ i ] );
             }
             grunt.verbose.writeflags([f.dest], 'Destination');
@@ -26,7 +28,7 @@ module.exports = function (grunt) {
         // Getting the destination directory or file
         var _dest = grunt.config(['docker', this.target, 'dest']);
         if (_dest !== undefined) {
-            options.outDir = _dest;   
+            options.outDir = _dest;
         }
 
         var done = this.async();
